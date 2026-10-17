@@ -428,3 +428,7 @@ The compose file uses the `development` target (hot reload, source mounted as a 
 1. Set `target: production` for the `web` service.
 2. Remove the `.:/app` volume.
 3. Do not publish the MySQL port (`3306`) to the host.
+
+## Credits
+
+Based on the _*Gin MVC Docker Starter Kit*_ by **Arif Efendi** (© 2021-2026).
