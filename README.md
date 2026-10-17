@@ -431,4 +431,4 @@ The compose file uses the `development` target (hot reload, source mounted as a 
 
 ## Credits
 
-Based on the _*Gin MVC Docker Starter Kit*_ by **Arif Efendi** (© 2021-2026).
+Based on the _*Fastapi RSR Boilerplate Docker Starter Kit*_ by **Arif Efendi** (© 2021-2026).
