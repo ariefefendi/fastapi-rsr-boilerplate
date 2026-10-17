@@ -1,0 +1,55 @@
+services:
+
+  db:
+    image: mysql:8.0
+    container_name: fastapi-core-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-djangocore}
+      # User aplikasi. MySQL image resmi SELALU membuat user non-root
+      # dengan host '%', jadi tidak perlu MYSQL_ROOT_HOST atau grant manual.
+      MYSQL_USER: ${DB_USERNAME:-djangocore_app}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD wajib diisi di .env}
+      # Password root terpisah, hanya untuk akses admin dari dalam container:
+      #   docker compose exec db mysql -uroot -p
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD wajib diisi di .env}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - fastapi-core-net
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${MYSQL_ROOT_PASSWORD}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+
+  web:
+    build:
+      context: .
+      target: development
+    container_name: fastapi-core-api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    networks:
+      - fastapi-core-net
+
+networks:
+  fastapi-core-net:
+    driver: bridge
+
+volumes:
+  mysql_data:

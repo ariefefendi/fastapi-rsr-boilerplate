@@ -1,0 +1,6 @@
+fastapi>=0.115
+uvicorn[standard]>=0.30
+gunicorn>=22.0
+sqlalchemy>=2.0
+mysqlclient>=2.2
+pydantic>=2.7
